@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Webmap 201</title>
+        <!-- Style -->
+        <link rel="stylesheet" href="src/leaflet.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="src/plugins/L.Control.Pan.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.Zoomslider.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.MousePosition.css">
+        <link rel="stylesheet" href="src/plugins/Leaflet.PolylineMeasure.css">
+        <link rel="stylesheet" href="src/plugins/easy-button.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.Sidebar.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-opencage/src/css/L.Control.OpenCageSearch.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-styleeditor/css/Leaflet.StyleEditor.css">
+        <link rel="stylesheet" href="src/css/all.min.css">
+        <link rel="stylesheet" href="src/plugins/leaflet.awesome-markers.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-mapkey/MapkeyIcons.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-mapkey/L.Icon.Mapkey.css">
+        
+        <!-- JavaScript -->
+        <script src="src/leaflet-src.js"></script>
+        <script src="src/jquery-3.5.1.min.js"></script>
+        <script src="src/plugins/L.Control.Pan.js"></script>
+        <script src="src/plugins/L.Control.Zoomslider.js"></script>
+        <script src="src/plugins/L.Control.MousePosition.js"></script>
+        <script src="src/plugins/Leaflet.PolylineMeasure.js"></script>
+        <script src="src/plugins/easy-button.js"></script>
+        <script src="src/plugins/L.Control.Sidebar.js"></script>
+        <script src="src/plugins/leaflet-opencage/src/js/L.Control.OpenCageSearch.js"></script>
+        <script src="src/plugins/leaflet-providers.js"></script>
+        <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
+        <script src="src/plugins/leaflet.ajax.min.js"></script>
+        <script src="src/plugins/leaflet.sprite.js"></script>
+        <script src="src/plugins/leaflet.awesome-markers.min.js"></script>
+        <script src="src/plugins/leaflet-mapkey/L.Icon.Mapkey.js"></script>
+        
+        <!-- Begin Leaflet.Draw -->         
+        <script src="src/plugins/leaflet-draw/Leaflet.draw.js"></script> 
+        <script src="src/plugins/leaflet-draw/Leaflet.Draw.Event.js"></script> 
+        <link rel="stylesheet" href="src/plugins/leaflet-draw/leaflet.draw.css"/> 
+        <script src="src/plugins/leaflet-draw/Toolbar.js"></script> 
+        <script src="src/plugins/leaflet-draw/Tooltip.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/GeometryUtil.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/LatLngUtil.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/LineUtil.Intersect.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/Polygon.Intersect.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/Polyline.Intersect.js"></script> 
+        <script src="src/plugins/leaflet-draw/ext/TouchEvents.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/DrawToolbar.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Feature.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.SimpleShape.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Polyline.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Circle.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Marker.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Polygon.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Rectangle.js"></script> 
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.CircleMarker.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/EditToolbar.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/EditToolbar.Edit.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/EditToolbar.Delete.js"></script> 
+        <script src="src/plugins/leaflet-draw/Control.Draw.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Poly.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.SimpleShape.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.CircleMarker.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Circle.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Rectangle.js"></script> 
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Marker.js"></script> 
+        <!-- End of Lealet Draw -->
+
+        <style>
+            #mapdiv{
+                /* vh: viewport takes up the whole screen*/
+                height:100vh;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="side-bar">
+            <button id="btnLocate" class="btn btn-primary btn-block">Locate</button>
+        </div>
+        <div id="mapdiv" class="col-12 float-right"></div>
+        <script>
+            var mymap; 
+            var lyrOSM;
+            var lyrWaterColor;
+            var lyrTopo;
+            var lyrImagery;
+            var lyrOutdoors;
+            var lyrMapBox;
+            var lyrEagleNests;
+            var lyrRaptorNests;
+            var mrkCurrentLocation;
+            var fgpDrawnItems;
+            var ctlAttribute;
+            var ctlMousePosition;
+            var ctlSidebar;
+            var ctlEasyButton;
+            var ctlMeasure;
+            var ctlLayers;
+            var ctlDraw;
+            var ctlStyle;
+            var objBasemaps;
+            var objOverlays;
+            var icnRedSprite;
+            var icnVioletSprite;
+            var icnLAMTree;
+            var icnLAMBird;
+            var icnMKTree;
+            var icnMKBird;
+            var icnEagleActive;
+            var icnEagleInactive;
+            
+            $(document).ready(function(){
+                icnRedSprite = L.spriteIcon('red');
+                icnVioletSprite = L.spriteIcon('violet');
+                icnLAMTree = L.AwesomeMarkers.icon({icon: 'tree-conifer', markerColor: 'green'});
+                icnLAMBird = L.AwesomeMarkers.icon({icon: 'dove', markerColor: 'green', prefix: 'fa', iconColor: 'lightpink'});
+                icnMKBird = L.icon.mapkey({icon: 'school', color: '#880000', background: 'green'});
+                icnMKTree = L.icon.mapkey({icon: 'tree_cinofer', color: '#880000', background: 'green', size: 50, borderRadius: 5});
+                icnEagleActive = L.icon({iconUrl: 'img/nest.PNG', iconSize: [40, 40], iconAnchor: [20, 24]});
+                icnEagleInactive = L.icon({iconUrl: 'img/nest2.png', iconSize: [40, 40], iconAnchor: [20, 24]});
+                
+                
+                mymap = L.map('mapdiv', 
+                                {
+                                    center: [19.4, -99.2], 
+                                    zoom: 13,
+//                                    zoomControl: false,
+                                    attributionControl: false,
+                                }
+                             );
+                
+                lyrOSM = L.tileLayer.provider('OpenStreetMap.Mapnik');
+                lyrWaterColor = L.tileLayer.provider('Stamen.Watercolor');
+                lyrTopo = L.tileLayer.provider('OpenTopoMap');
+                lyrOutdoors = L.tileLayer.provider('Thunderforest.Outdoors');
+                lyrImagery = L.tileLayer.provider('Esri.WorldImagery');
+                mymap.addLayer(lyrOSM);
+                
+                fgpDrawnItems = L.featureGroup().addTo(mymap);
+                
+                objBasemaps = {
+                    'Open Street Maps': lyrOSM,
+                    'Topo Map': lyrTopo,
+                    'Imagery': lyrImagery,
+                    'Outdoors': lyrOutdoors,
+                    'Watercolor': lyrWaterColor
+                };
+                
+                lyrEagleNests = new L.GeoJSON.AJAX("data/wildlife_eagle.geojson", {
+                    pointToLayer: returnEagleMarker,
+//                    filter: filterEagleNests
+                }).addTo(mymap);
+                
+                /* Relocate to eagle layer */
+                lyrEagleNests.on('data:loaded', function(){
+                   mymap.fitBounds(lyrEagleNests.getBounds()); 
+                });
+                
+                lyrRaptorNests = new L.GeoJSON.AJAX("data/wildlife_raptor.geojson", {
+                    pointToLayer: returnRaptorNests
+                });
+                
+                lyrRaptorNests.on('data:loaded', function(){
+                   lyrRaptorNests.addTo(mymap);
+                });
+                
+                objOverlays = {
+                    'Eagle Nest': lyrEagleNests,
+                    'Raptor Nest': lyrRaptorNests,
+                    'Drawn Items': fgpDrawnItems
+                };
+                
+                ctlLayers = L.control.layers(objBasemaps, objOverlays).addTo(mymap);
+                
+                ctlSidebar = L.control.sidebar('side-bar').addTo(mymap);
+                
+                ctlAttribute = L.control.attribution({
+                                                        position: 'bottomleft',
+                                                    });
+                ctlAttribute.addAttribution('OSM');
+                ctlAttribute.addAttribution('<a href="http://yijingzhou.com">http://yijingzhou.com</a>')
+                ctlAttribute.addTo(mymap);
+                             
+                ctlMousePosition = L.control.mousePosition().addTo(mymap);
+ 
+                ctlEasyButton = L.easyButton('glyphicon-transfer', function(){
+                                    ctlSidebar.toggle();
+                                }).addTo(mymap);
+                
+                ctlDraw = new L.Control.Draw({
+                    draw: {
+                        circle: false
+                    },
+                    edit: {
+                        featureGroup: fgpDrawnItems
+                    }
+                });
+                ctlDraw.addTo(mymap);
+                
+                ctlMeasure = L.control.polylineMeasure().addTo(mymap);
+                
+                mymap.on('draw:created', function(e){
+                    console.log(e);
+                    fgpDrawnItems.addLayer(e.layer);
+                });
+                
+                ctlStyle = L.control.styleEditor().addTo(mymap);
+                
+                mymap.on('locationfound', function(e){
+                    console.log(e);
+                    if (mrkCurrentLocation) {
+                        mrkCurrentLocation.remove();
+                    }
+                    /*mrkCurrentLocation = L.circleMarker(e.latlng).addTo(mymap);*/
+                    mrkCurrentLocation = L.circle(e.latlng, {radius: e.accuracy/2}).addTo(mymap);
+                    mymap.setView(e.latlng, 14);
+                });
+                
+                mymap.on('locationerror', function(e){
+                    console.log(e);
+                    alert('Location was not found.');
+                });
+                
+                $('#btnLocate').click(function(){
+                    mymap.locate(); 
+                });
+
+                /* This function runs on every single geojson object */
+                function returnEagleMarker(json, latlng){
+                    /* attribute data */
+                    var att = json.properties;
+//                    if (att.status == 'ACTIVE NEST') {
+//                        var clrNest = 'LIGHTPINK';
+//                    } else {
+//                        var clrNest = 'OLIVEDRAB';
+//                    }
+//                    return L.circle(latlng, {radius: 804, color: clrNest, fillColor: 'DARKOLIVEGREEN', fillOpacity: 0.5}).bindTooltip('<h5>Eagle Nest: ' + att.nest_id + '</h5>Status: ' + att.status);
+                    
+                    if (att.status == 'ACTIVE NEST') {
+//                        var icnEagle = icnRedSprite;
+//                        var icnEagle = icnLAMBird;
+//                        var icnEagle = icnMKBird;
+                        var icnEagle = icnEagleActive;
+                    } else {
+//                        var icnEagle = icnVioletSprite;
+//                        var icnEagle = icnLAMTree;
+//                        var icnEagle = icnMKTree;
+                        var icnEagle = icnEagleInactive;
+                    }
+                    return L.marker(latlng, {icon: icnEagle}).bindTooltip('<h5>Eagle Nest: ' + att.nest_id + '</h5>Status: ' + att.status);
+                }
+                
+                /* Returns true or false to determine if it includes the data*/
+//                function filterEagleNests(json){
+//                    var att = json.properties;
+//                    if (att.status == 'ACTIVE NEST') {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                }
+                
+                function returnRaptorNests(json, latlng){
+                    var att = json.properties;
+                    switch (att.recentspecies) {
+                        case 'Red-tail Hawk':
+                            var radRaptor = 533;
+                            break;
+                        case 'Swainsons Hawk':
+                            var radRaptor = 400;
+                            break;
+                        default:
+                            var radRaptor = 804;
+                            break;
+                    }
+                    switch (att.recentstatus) {
+                        case 'ACTIVE NEST':
+                            var optRaptor = {
+                                radius: radRaptor, 
+                                color: 'INDIANRED', 
+                                fillColor: 'blue',
+                                opacity: 0.5
+                            };
+                            break;
+                        case 'INACTIVE NEST': 
+                            var optRaptor = {
+                                radius: radRaptor, 
+                                color: 'blue', 
+                                fillColor: 'blue',
+                                opacity: 0.5
+                            };
+                            break;
+                        case 'FLEDGED NEST': 
+                            var optRaptor = {
+                                radius: radRaptor, 
+                                color: 'blue', 
+                                fillColor: 'blue',
+                                opacity: 0.5,
+                                dashArray: '2, 8'
+                            };
+                            break;
+                    }
+                    return L.circle(latlng, optRaptor).bindPopup('<h5>Raptor Nest: ' + att.Nest_ID + '</h5>Status: ' + att.recentstatus + '<br>Species: ' + att.recentspecies + '<br>Last Survey: ' + att.lastsurvey);
+                }
+            });
+        </script>
+    </body>
+</html>
